@@ -1,7 +1,7 @@
 import java.time.LocalDate;
 import java.util.Objects;
 
-public abstract class Risiko {
+public abstract class Risiko implements Comparable<Risiko> {
     private final int id;
     private static int anzahlRisiken = 0;
     private String bezeichnung;
@@ -53,8 +53,12 @@ public abstract class Risiko {
         this.erstellungsdatum = erstellungsdatum;
     }
 
+    public static float berechneRisikowert(float eintrittswahrscheinlichkeit, float kosten_im_schadensfall) {
+        return eintrittswahrscheinlichkeit * kosten_im_schadensfall;
+    }
+
     public float berechneRisikowert() {
-        return this.eintrittswahrscheinlichkeit * this.kosten_im_schadensfall;
+        return Risiko.berechneRisikowert(eintrittswahrscheinlichkeit, kosten_im_schadensfall);
     }
 
     public abstract float ermittleRueckstellung();
@@ -80,6 +84,11 @@ public abstract class Risiko {
     @Override
     public int hashCode() {
         return Objects.hash(bezeichnung, eintrittswahrscheinlichkeit, kosten_im_schadensfall);
+    }
+
+    @Override
+    public int compareTo(Risiko o) {
+        return Float.compare(berechneRisikowert(), o.berechneRisikowert());
     }
 
 }

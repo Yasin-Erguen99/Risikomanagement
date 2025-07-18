@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -14,8 +16,10 @@ public class Risikoverwaltung {
     }
 
     public void zeigeRisiken() {
+        Collections.sort(risiken);
         for (Risiko r : risiken) {
             r.druckeDaten();
+            System.out.println();
         }
     }
 
