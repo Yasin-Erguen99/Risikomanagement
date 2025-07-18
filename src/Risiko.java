@@ -1,19 +1,24 @@
 import java.time.LocalDate;
+import java.util.Objects;
 
 public abstract class Risiko {
-    @SuppressWarnings("unused")
     private final int id;
+    private static int anzahlRisiken = 0;
     private String bezeichnung;
     private float eintrittswahrscheinlichkeit;
     private float kosten_im_schadensfall;
     private LocalDate erstellungsdatum;
 
-    public Risiko(int id, String bezeichnung, float eintrittswahrscheinlichkeit, float kosten_im_schadensfall) {
-        this.id = id;
+    public Risiko(String bezeichnung, float eintrittswahrscheinlichkeit, float kosten_im_schadensfall) {
+        this.id = anzahlRisiken++;
         this.bezeichnung = bezeichnung;
         this.eintrittswahrscheinlichkeit = eintrittswahrscheinlichkeit;
         this.kosten_im_schadensfall = kosten_im_schadensfall;
         this.erstellungsdatum = LocalDate.now();
+    }
+
+    public int getId() {
+        return this.id;
     }
 
     public String getBezeichnung() {
@@ -49,15 +54,32 @@ public abstract class Risiko {
     }
 
     public float berechneRisikowert() {
-        return Risiko.berechneRisikowert(this.eintrittswahrscheinlichkeit, this.kosten_im_schadensfall);
-    }
-
-    public static float berechneRisikowert(float eintrittswahrscheinlichkeit, float kosten_im_schadensfall) {
-        return eintrittswahrscheinlichkeit * kosten_im_schadensfall;
+        return this.eintrittswahrscheinlichkeit * this.kosten_im_schadensfall;
     }
 
     public abstract float ermittleRueckstellung();
 
     public abstract void druckeDaten();
+
+    @Override
+    public boolean equals(Object o) {
+        // 1. Identische Referenz?
+        if (this == o)
+            return true;
+
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        // 3. Typ-Cast und Attributvergleich
+        Risiko risiko = (Risiko) o;
+        return Float.compare(eintrittswahrscheinlichkeit, risiko.eintrittswahrscheinlichkeit) == 0 &&
+                Float.compare(kosten_im_schadensfall, risiko.kosten_im_schadensfall) == 0 &&
+                Objects.equals(bezeichnung, risiko.bezeichnung);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(bezeichnung, eintrittswahrscheinlichkeit, kosten_im_schadensfall);
+    }
 
 }

@@ -1,2 +1,7 @@
 .vscode/settings.json
 bin/Risiko.class
+bin/AkzeptablesRisiko.class
+bin/ExtremesRisiko.class
+bin/InakzeptablesRisiko.class
+bin/Main.class
+bin/Risikoverwaltung.class
