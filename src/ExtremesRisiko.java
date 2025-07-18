@@ -1,7 +1,5 @@
 import java.util.Objects;
 
-import javax.swing.plaf.metal.MetalIconFactory.FolderIcon16;
-
 public class ExtremesRisiko extends InakzeptablesRisiko {
 
     private float versicherungsbeitrag;

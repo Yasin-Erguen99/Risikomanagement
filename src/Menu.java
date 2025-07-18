@@ -1,3 +1,4 @@
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import javax.swing.JOptionPane;
@@ -26,29 +27,44 @@ public class Menu {
         Scanner sc = new Scanner(System.in);
         while (!beendet) {
             druckeMenu();
+
+            Integer eingabe = leseMenuAuswahl(sc);
+            if (eingabe != null)
+                switch (eingabe) {
+                    case 1:
+                        nehmeNeuesRisikoAuf();
+                        break;
+                    case 2:
+                        risikoverwaltung.zeigeRisiken();
+                        break;
+                    case 3:
+                        risikoverwaltung.sucheRisikoMitMaxRueckstellung();
+                        break;
+                    case 4:
+                        System.out.printf("Summe aller Rückstellungen: %.2f%n",
+                                risikoverwaltung.berechneSummeRueckstellung());
+                        break;
+                    case 5:
+                        sc.close();
+                        beendet = true;
+                        break;
+                    default:
+                        System.out.println("Ungültige Auswahl. Bitte wählen Sie 1-5.\n");
+                        break;
+                }
+
+        }
+    }
+
+    private Integer leseMenuAuswahl(Scanner sc) {
+        try {
             int eingabe = sc.nextInt();
             System.out.println();
-            switch (eingabe) {
-                case 1:
-                    nehmeNeuesRisikoAuf();
-                    break;
-                case 2:
-                    risikoverwaltung.zeigeRisiken();
-                    break;
-                case 3:
-                    risikoverwaltung.sucheRisikoMitMaxRueckstellung();
-                    break;
-                case 4:
-                    System.out.printf("Summe aller Rückstellungen: %.2f%n",
-                            risikoverwaltung.berechneSummeRueckstellung());
-                    break;
-                case 5:
-                    sc.close();
-                    beendet = true;
-                    break;
-                default:
-                    break;
-            }
+            return eingabe;
+        } catch (InputMismatchException e) {
+            System.out.println("Bitte gültige Zahl eingeben!");
+            sc.nextLine();
+            return null;
         }
     }
 
@@ -56,19 +72,13 @@ public class Menu {
         String bezeichnung = JOptionPane.showInputDialog("Bezeichnung");
         if (bezeichnung == null)
             return;
-
-        String eintrittswahrscheinlichkeitStr = JOptionPane.showInputDialog("Eintrittswahrscheinlichkeit");
-        if (eintrittswahrscheinlichkeitStr == null)
+        Float eintrittswahrscheinlichkeit = eingabeFloat("Eintrittswahrscheinlichkeit");
+        if (eintrittswahrscheinlichkeit == null)
             return;
-
-        String kosten_im_schadensfallStr = JOptionPane.showInputDialog("Kosten im Schadensfall");
-        if (kosten_im_schadensfallStr == null)
+        Float kosten_im_schadensfall = eingabeFloat("Kosten im Schadensfall");
+        if (kosten_im_schadensfall == null)
             return;
-
-        float eintrittswahrscheinlichkeit = Float.parseFloat(eintrittswahrscheinlichkeitStr);
-        float kosten_im_schadensfall = Float.parseFloat(kosten_im_schadensfallStr);
         float risikowert = Risiko.berechneRisikowert(eintrittswahrscheinlichkeit, kosten_im_schadensfall);
-
         if (risikowert < LIMIT)
             risikoverwaltung
                     .aufnehmen(new AkzeptablesRisiko(bezeichnung, eintrittswahrscheinlichkeit, kosten_im_schadensfall));
@@ -80,12 +90,28 @@ public class Menu {
                 risikoverwaltung.aufnehmen(new InakzeptablesRisiko(bezeichnung, eintrittswahrscheinlichkeit,
                         kosten_im_schadensfall, massnahmen));
             } else {
-                String versicherungsbeitragStr = JOptionPane.showInputDialog("Versicherungsbeitrag");
-                if (versicherungsbeitragStr == null)
+                Float versicherungsbeitrag = eingabeFloat("Versicherungsbeitrag");
+                if (versicherungsbeitrag == null)
                     return;
-                float Versicherungsbeitrag = Float.parseFloat(versicherungsbeitragStr);
                 risikoverwaltung.aufnehmen(new ExtremesRisiko(bezeichnung, eintrittswahrscheinlichkeit,
-                        kosten_im_schadensfall, massnahmen, Versicherungsbeitrag));
+                        kosten_im_schadensfall, massnahmen, versicherungsbeitrag));
+            }
+        }
+    }
+
+    private Float eingabeFloat(String prompt) {
+        String eingabeStr = JOptionPane.showInputDialog(prompt);
+        if (eingabeStr == null)
+            return null;
+
+        while (true) {
+            try {
+                return Float.parseFloat(eingabeStr);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Bitte gültigen Wert eingeben");
+                eingabeStr = JOptionPane.showInputDialog(prompt);
+                if (eingabeStr == null)
+                    return null;
             }
         }
     }
