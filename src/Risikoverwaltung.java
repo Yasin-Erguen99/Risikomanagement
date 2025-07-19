@@ -17,7 +17,7 @@ public class Risikoverwaltung {
     public void zeigeRisiken() {
         Collections.sort(risiken);
         for (Risiko r : risiken) {
-            r.druckeDaten();
+            r.druckeDaten(System.out);
             System.out.println();
         }
     }
@@ -34,7 +34,7 @@ public class Risikoverwaltung {
             }
         }
         if (risikoMitMaxRueckstellung != null) {
-            risikoMitMaxRueckstellung.druckeDaten();
+            risikoMitMaxRueckstellung.druckeDaten(System.out);
         } else {
             System.out.println("Es sind keine Risiken in der Verwaltung vorhanden.");
         }

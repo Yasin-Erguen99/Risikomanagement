@@ -1,3 +1,4 @@
+import java.io.OutputStream;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -63,7 +64,7 @@ public abstract class Risiko implements Comparable<Risiko> {
 
     public abstract float ermittleRueckstellung();
 
-    public abstract void druckeDaten();
+    public abstract void druckeDaten(OutputStream stream);
 
     @Override
     public boolean equals(Object o) {

@@ -1,3 +1,5 @@
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.Objects;
 
 public class InakzeptablesRisiko extends Risiko {
@@ -24,8 +26,9 @@ public class InakzeptablesRisiko extends Risiko {
     }
 
     @Override
-    public void druckeDaten() {
-        System.out.printf(
+    public void druckeDaten(OutputStream stream) {
+        PrintWriter printWriter = new PrintWriter(stream, true);
+        printWriter.printf(
                 "Id %d Inakzeptables Risiko \"%s\" aus %d/%d;\nRisikowert %.2f; Rueckstellung %.2f;\nMassnahme \"%s\"\n",
                 getId(), getBezeichnung(), getErstellungsdatum().getMonthValue(), getErstellungsdatum().getYear(),
                 berechneRisikowert(), ermittleRueckstellung(), getMassnahme());
