@@ -1,0 +1,7 @@
+Id 0 Akzeptables Risiko "Lizenskosten der IDE steigt" aus 7/2025;
+Risikowert 4000,00; Rueckstellung 0,00
+Id 1 Inakzeptables Risiko "DB Experte verlässt das Projekt" aus 7/2025;
+Risikowert 100000,00; Rueckstellung 100000,00;
+Massnahme "Erstaz bei Dienstleister reservieren"
+Id 2 Extremes Risiko "Hauptauftraggeber meldet Insolvenz an" aus 7/2025;
+Versicherungsbeitrag 50000,00; Massnahme "Versicherung abschließen"

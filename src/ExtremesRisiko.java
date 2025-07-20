@@ -1,8 +1,11 @@
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.Objects;
 
 public class ExtremesRisiko extends InakzeptablesRisiko {
 
     private float versicherungsbeitrag;
+    private static final long serialVersionUID = 1L;
 
     public ExtremesRisiko(String bezeichnung, float eintrittswahrscheinlichkeit, float kosten_im_schadensfall,
             String massnahme, float versicherungsbeitrag) {
@@ -25,8 +28,9 @@ public class ExtremesRisiko extends InakzeptablesRisiko {
     }
 
     @Override
-    public void druckeDaten() {
-        System.out.printf("Id %d Extremes Risiko \"%s\" aus %d/%d;\nVersicherungsbeitrag %.2f; Massnahme \"%s\"\n",
+    public void druckeDaten(OutputStream stream) {
+        PrintWriter printWriter = new PrintWriter(stream, true);
+        printWriter.printf("Id %d Extremes Risiko \"%s\" aus %d/%d;\nVersicherungsbeitrag %.2f; Massnahme \"%s\"\n",
                 getId(), getBezeichnung(), getErstellungsdatum().getMonthValue(), getErstellungsdatum().getYear(),
                 getVersicherungsbeitrag(), getMassnahme());
     }

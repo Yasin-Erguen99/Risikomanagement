@@ -1,13 +1,16 @@
+import java.io.OutputStream;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public abstract class Risiko implements Comparable<Risiko> {
+public abstract class Risiko implements Comparable<Risiko>, Serializable {
     private final int id;
     private static int anzahlRisiken = 0;
     private String bezeichnung;
     private float eintrittswahrscheinlichkeit;
     private float kosten_im_schadensfall;
     private LocalDate erstellungsdatum;
+    private static final long serialVersionUID = 1L;
 
     public Risiko(String bezeichnung, float eintrittswahrscheinlichkeit, float kosten_im_schadensfall) {
         this.id = anzahlRisiken++;
@@ -19,6 +22,10 @@ public abstract class Risiko implements Comparable<Risiko> {
 
     public int getId() {
         return this.id;
+    }
+
+    public static void setAnzahlRisiken(int i) {
+        anzahlRisiken = i;
     }
 
     public String getBezeichnung() {
@@ -63,7 +70,7 @@ public abstract class Risiko implements Comparable<Risiko> {
 
     public abstract float ermittleRueckstellung();
 
-    public abstract void druckeDaten();
+    public abstract void druckeDaten(OutputStream stream);
 
     @Override
     public boolean equals(Object o) {

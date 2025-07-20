@@ -1,10 +1,11 @@
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 public class Risikoverwaltung {
-    List<Risiko> risiken;
+    private List<Risiko> risiken;
 
     public Risikoverwaltung() {
         risiken = new ArrayList<Risiko>();
@@ -14,11 +15,10 @@ public class Risikoverwaltung {
         risiken.add(risiko);
     }
 
-    public void zeigeRisiken() {
+    public void zeigeRisiken(OutputStream stream) {
         Collections.sort(risiken);
         for (Risiko r : risiken) {
-            r.druckeDaten();
-            System.out.println();
+            r.druckeDaten(stream);
         }
     }
 
@@ -34,7 +34,7 @@ public class Risikoverwaltung {
             }
         }
         if (risikoMitMaxRueckstellung != null) {
-            risikoMitMaxRueckstellung.druckeDaten();
+            risikoMitMaxRueckstellung.druckeDaten(System.out);
         } else {
             System.out.println("Es sind keine Risiken in der Verwaltung vorhanden.");
         }
@@ -48,4 +48,15 @@ public class Risikoverwaltung {
         }
         return summeRueckstellung;
     }
+
+ 
+    public List<Risiko> getRisiken() {
+        return risiken;
+    }
+
+
+    public void setRisiken(List<Risiko> risiken) {
+        this.risiken = risiken;
+    }
+
 }

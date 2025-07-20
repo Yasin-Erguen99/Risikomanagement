@@ -1,6 +1,11 @@
-public class AkzeptablesRisiko extends Risiko {
+import java.io.OutputStream;
+import java.io.PrintWriter;
 
-    public AkzeptablesRisiko(String bezeichnung, float eintrittswahrscheinlichkeit, float kosten_im_schadensfall) {
+public class AkzeptablesRisiko extends Risiko {
+    private static final long serialVersionUID = 1L;
+
+    public AkzeptablesRisiko(String bezeichnung, float eintrittswahrscheinlichkeit,
+            float kosten_im_schadensfall) {
         super(bezeichnung, eintrittswahrscheinlichkeit, kosten_im_schadensfall);
     }
 
@@ -10,10 +15,11 @@ public class AkzeptablesRisiko extends Risiko {
     }
 
     @Override
-    public void druckeDaten() {
-        System.out.printf("Id %d Akzeptables Risiko \"%s\" aus %d/%d;\nRisikowert %.2f; Rueckstellung %.2f\n", getId(),
+    public void druckeDaten(OutputStream stream) {
+        PrintWriter printWriter = new PrintWriter(stream, true);
+        printWriter.printf("Id %d Akzeptables Risiko \"%s\" aus %d/%d;\nRisikowert %.2f; Rueckstellung %.2f\n", getId(),
                 getBezeichnung(), getErstellungsdatum().getMonthValue(), getErstellungsdatum().getYear(),
                 berechneRisikowert(), ermittleRueckstellung());
     }
-   
+
 }

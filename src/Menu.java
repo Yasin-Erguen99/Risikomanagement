@@ -1,4 +1,12 @@
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 import javax.swing.JOptionPane;
@@ -16,9 +24,12 @@ public class Menu {
         System.out.println("Risikoverwaltung\n");
         System.out.println("1. Risiko aufnehmen");
         System.out.println("2. Zeige alle Risiken");
-        System.out.println("3. Zeige Risiko mit maximaler Rückstellung");
-        System.out.println("4. Berechne Summe aller Rückstellungen");
-        System.out.println("5. Beenden\n");
+        System.out.println("3. Risikoliste in Datei schreiben");
+        System.out.println("4. Zeige Risiko mit maximaler Rückstellung");
+        System.out.println("5. Berechne Summe aller Rückstellungen");
+        System.out.println("6. Speichern");
+        System.out.println("7. Laden");
+        System.out.println("8. Beenden\n");
         System.out.print("Bitte Menüpunkt wählen: ");
     }
 
@@ -35,16 +46,25 @@ public class Menu {
                         nehmeNeuesRisikoAuf();
                         break;
                     case 2:
-                        risikoverwaltung.zeigeRisiken();
+                        risikoverwaltung.zeigeRisiken(System.out);
                         break;
                     case 3:
-                        risikoverwaltung.sucheRisikoMitMaxRueckstellung();
+                        inDateiSchreiben();
                         break;
                     case 4:
+                        risikoverwaltung.sucheRisikoMitMaxRueckstellung();
+                        break;
+                    case 5:
                         System.out.printf("Summe aller Rückstellungen: %.2f%n",
                                 risikoverwaltung.berechneSummeRueckstellung());
                         break;
-                    case 5:
+                    case 6:
+                        speichern();
+                        break;
+                    case 7:
+                        laden();
+                        break;
+                    case 8:
                         sc.close();
                         beendet = true;
                         break;
@@ -53,6 +73,55 @@ public class Menu {
                         break;
                 }
 
+        }
+    }
+
+    public void speichern() {
+        try (ObjectOutputStream out = new ObjectOutputStream(
+                new BufferedOutputStream(new FileOutputStream("risiken.ser")))) {
+            out.writeObject(risikoverwaltung.getRisiken());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void laden() {
+        try (ObjectInputStream in = new ObjectInputStream(
+                new BufferedInputStream(new FileInputStream("risiken.ser")))) {
+            List<Risiko> risikoListe = (List<Risiko>) in.readObject();
+            risikoverwaltung.setRisiken(risikoListe);
+            Risiko.setAnzahlRisiken(risikoverwaltung.getRisiken().size());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void inDateiSchreiben() {
+        String dateiName = "";
+        boolean dateiNameGültig = false;
+        while (!dateiNameGültig) {
+            dateiName = JOptionPane.showInputDialog("Dateinamen eingben");
+            if (dateiName == null)
+                return;
+            if (dateiName.isBlank()) {
+                int antwort = JOptionPane.showConfirmDialog(null, "Dateiname ist leer! Neuen Dateinamen eingeben?",
+                        "Hinweis", JOptionPane.YES_NO_OPTION);
+                if (antwort == JOptionPane.NO_OPTION)
+                    return;
+            } else {
+                dateiNameGültig = true;
+                dateiName += ".liste";
+
+            }
+        }
+
+        try (BufferedOutputStream out = new BufferedOutputStream(
+                new FileOutputStream(dateiName))) {
+            risikoverwaltung.zeigeRisiken(out);
+        } catch (IOException e) {
         }
     }
 
